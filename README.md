@@ -1,3 +1,2 @@
 # EmailRipper
-## Email Ripping Bot written with Java and Jsoup
-### I wrote fully with TDD 
+## Email Ripping Bot written with Jsoup library for Java. I also used TDD technique for this project
