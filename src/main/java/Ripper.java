@@ -16,6 +16,11 @@ import java.util.regex.Pattern;
 public class Ripper {
 
     private static Document doc;
+
+    /**
+     * Connects to the specific website address
+     * @param url
+     */
     private static void connect(String url) {
         try {
             doc = Jsoup.connect(url).get();
@@ -27,6 +32,7 @@ public class Ripper {
     }
 
     /**
+     * Overloading of the original connect(String url) method
      * Connects to google search url and opens a specific page
      * @param url
      * @param pageNumber
@@ -50,7 +56,7 @@ public class Ripper {
      * or "/search" or "https://support" or "https://policies"
      * @param url
      * @param pageNumber
-     * @return
+     * @return ArrayList of found website addresses
      */
     public static ArrayList<String> ripWebsiteAddresses(String url, int pageNumber) {
 
@@ -73,7 +79,7 @@ public class Ripper {
      * Gets the names of the companies on the google search page
      * @param url
      * @param pageNumber
-     * @return
+     * @return ArrayList of found company names
      */
     public static ArrayList<String> ripCompanyNames(String url, int pageNumber) {
 
@@ -95,19 +101,24 @@ public class Ripper {
     /**
      * Gets the emails found on the homepage and contacts pages of the website
      * @param url
-     * @return
+     * @return ArrayList of the emails found on the specific website
      */
     public static ArrayList<String> ripEmails(String url) {
 
         ArrayList<String> emails = new ArrayList<>();
 
-        addToCollectionFoundEmails(url, emails);
-        addToCollectionFoundEmails(getContactPage(url), emails);
+        addFoundEmailsToList(url, emails);
+        addFoundEmailsToList(getContactPage(url), emails);
 
         return emails;
     }
 
-    private static void addToCollectionFoundEmails(String url, List<String> emails) {
+    /**
+     * Checks if found string are really emails and add them to the provided list
+     * @param url
+     * @param emails
+     */
+    private static void addFoundEmailsToList(String url, List<String> emails) {
         try {
             connect(url);
         } catch (IllegalArgumentException e) {}
@@ -123,6 +134,12 @@ public class Ripper {
         }
     }
 
+    /**
+     * Founds contact page of the website
+     * <h3>WORKS ONLY WITH ENGLISH WEBSITES VERSIONS</h3>
+     * @param url
+     * @return url of the contact page
+     */
     private static String getContactPage(String url) {
         String contactPageLink = "";
 
