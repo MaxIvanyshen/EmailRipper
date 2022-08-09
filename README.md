@@ -4,4 +4,7 @@
  ## How to run
  - clone the repository on your machine
  - read the javadoc for ```Ripper``` class
- - run ```Example``` class to see the example or use ```Ripper``` class methods as you want
+ - run the [example code](#example-code) to see the example or use ```Ripper``` class methods as you want
+
+### Example
+<p id="example-code">hello world<p/>
