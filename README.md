@@ -4,7 +4,7 @@
  ## How to run
  - clone the repository on your machine
  - read the javadoc for ```Ripper``` class
- - run the [example code](#example-code) or use ```Ripper``` class methods as you want
+ - run the [example code](#example-code) or use ```Ripper``` class methods as you wish
 
 ## <p id="example-code">Example code<p/>
 This code takes the emails of the architectural firms in Belgium found by this link: https://bit.ly/3QetS9S
