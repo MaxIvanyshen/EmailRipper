@@ -1,24 +1,21 @@
-import org.jsoup.Connection;
-import org.jsoup.HttpStatusException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.print.DocFlavor;
 import java.io.IOException;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class for getting website addresses and emails from these addresses
+ */
 public class Ripper {
 
     private static Document doc;
-
     private static void connect(String url) {
         try {
             doc = Jsoup.connect(url).get();
@@ -29,6 +26,11 @@ public class Ripper {
         }
     }
 
+    /**
+     * Connects to google search url and opens a specific page
+     * @param url
+     * @param pageNumber
+     */
     private static void connect(String url, int pageNumber) {
         try {
             doc = Jsoup.connect(url).get();
@@ -42,7 +44,15 @@ public class Ripper {
         }
     }
 
-    public static String[] ripWebsiteAddresses(String url, int pageNumber) {
+    /**
+     * Gets all the website addresses on the google search page
+     * except for addresses that start with "https://www.google.com"
+     * or "/search" or "https://support" or "https://policies"
+     * @param url
+     * @param pageNumber
+     * @return
+     */
+    public static ArrayList<String> ripWebsiteAddresses(String url, int pageNumber) {
 
         connect(url, pageNumber);
 
@@ -56,10 +66,16 @@ public class Ripper {
                 continue;
             linkList.add(s);
         }
-        return linkList.toArray(new String[0]);
+        return new ArrayList<String>(Arrays.asList(linkList.toArray(new String[0])));
     }
 
-    public static String[] ripCompanyNames(String url, int pageNumber) {
+    /**
+     * Gets the names of the companies on the google search page
+     * @param url
+     * @param pageNumber
+     * @return
+     */
+    public static ArrayList<String> ripCompanyNames(String url, int pageNumber) {
 
         connect(url, pageNumber);
 
@@ -72,10 +88,15 @@ public class Ripper {
             websiteList.add(e.child(0).ownText());
         }
 
-        return websiteList.toArray(new String[0]);
+        return new ArrayList<>(Arrays.asList(websiteList.toArray(new String[0])));
 
     }
 
+    /**
+     * Gets the emails found on the homepage and contacts pages of the website
+     * @param url
+     * @return
+     */
     public static ArrayList<String> ripEmails(String url) {
 
         ArrayList<String> emails = new ArrayList<>();
@@ -86,7 +107,7 @@ public class Ripper {
         return emails;
     }
 
-    private static void addToCollectionFoundEmails(String url, ArrayList<String> emails) {
+    private static void addToCollectionFoundEmails(String url, List<String> emails) {
         try {
             connect(url);
         } catch (IllegalArgumentException e) {}
