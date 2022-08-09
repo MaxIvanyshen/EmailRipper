@@ -110,8 +110,7 @@ public class Ripper {
         Elements links = doc.select("a");
 
         for(Element link : links) {
-            boolean needed = link.ownText().equalsIgnoreCase("contact") || link.ownText().equalsIgnoreCase("contact us") ||
-                    link.ownText().equalsIgnoreCase("kontakt");
+            boolean needed = link.ownText().equalsIgnoreCase("contact") || link.ownText().equalsIgnoreCase("contact us");
             if(needed) {
                 String text = link.ownText();
                 if(link.attr("href").startsWith("https://") || link.attr("href").startsWith("http://")) {
