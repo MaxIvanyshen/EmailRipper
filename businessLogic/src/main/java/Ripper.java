@@ -32,10 +32,20 @@ public class Ripper {
     private static void connect(String url, int pageNumber) {
         try {
             doc = Jsoup.connect(url).get();
-            if(pageNumber > 1) {
+            if (pageNumber > 10) {
+                connect(url, 10);
+                doc = Jsoup.connect("https://www.google.com"
+                        + doc.getElementsByAttributeValue("aria-label", "Page 10").get(0).attr("href")).get();
+            }
+            if (pageNumber > 1) {
                 Elements els = doc.getElementsByAttributeValue("aria-label", "Page " + pageNumber);
-                String newUrl = "https://www.google.com" + els.get(0).attr("href");
-                doc = Jsoup.connect(newUrl).get();
+                if(els.size() > 0) {
+                    String newUrl = "https://www.google.com" + els.get(0).attr("href");
+
+                    doc = Jsoup.connect(newUrl).get();
+                }
+                else
+                    return;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,11 +58,12 @@ public class Ripper {
 
         Elements addresses = doc.getElementsByTag("a");
         ArrayList<String> linkList = new ArrayList<>();
-        for(Element link : addresses) {
+        for (Element link : addresses) {
             String s = link.attr("href");
-            boolean notNeededLink = s.startsWith("https://www.google.com") || s.startsWith("/search") || s.startsWith("https://support")
-                    || s.startsWith("https://policies")|| s.equals("#") || s.equals("");
-            if(notNeededLink)
+            boolean notNeededLink = s.startsWith("https://www.google.com") || s.startsWith("/search")
+                    || s.startsWith("https://support")
+                    || s.startsWith("https://policies") || s.equals("#") || s.equals("");
+            if (notNeededLink)
                 continue;
             linkList.add(s);
         }
@@ -66,8 +77,8 @@ public class Ripper {
         ArrayList<String> websiteList = new ArrayList<>();
 
         Elements s = doc.getElementsByAttributeValue("role", "heading");
-        for(Element e : s) {
-            if(e.child(0).ownText().equals(""))
+        for (Element e : s) {
+            if (e.child(0).ownText().equals(""))
                 continue;
             websiteList.add(e.child(0).ownText());
         }
@@ -89,15 +100,16 @@ public class Ripper {
     private static void addToCollectionFoundEmails(String url, ArrayList<String> emails) {
         try {
             connect(url);
-        } catch (IllegalArgumentException e) {}
+        } catch (IllegalArgumentException e) {
+        }
 
         Pattern p = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+");
         Matcher matcher = p.matcher(doc.text());
         while (matcher.find()) {
             String s = matcher.group();
-            if(s.endsWith("."))
+            if (s.endsWith("."))
                 s = s.substring(0, s.length() - 2);
-            if(!emails.contains(s))
+            if (!emails.contains(s))
                 emails.add(s);
         }
     }
@@ -109,12 +121,13 @@ public class Ripper {
 
         Elements links = doc.select("a");
 
-        for(Element link : links) {
-            boolean needed = link.ownText().equalsIgnoreCase("contact") || link.ownText().equalsIgnoreCase("contact us") ||
+        for (Element link : links) {
+            boolean needed = link.ownText().equalsIgnoreCase("contact") || link.ownText().equalsIgnoreCase("contact us")
+                    ||
                     link.ownText().equalsIgnoreCase("kontakt");
-            if(needed) {
+            if (needed) {
                 String text = link.ownText();
-                if(link.attr("href").startsWith("https://") || link.attr("href").startsWith("http://")) {
+                if (link.attr("href").startsWith("https://") || link.attr("href").startsWith("http://")) {
                     contactPageLink = link.attr("href");
                 } else {
                     contactPageLink = url + (link.attr("href").replaceFirst("/", ""));
