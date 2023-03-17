@@ -11,8 +11,14 @@
     <div class="s003">
       <form>
         <div class="inner-form">
-          <div class="input-field second-wrap">
-            <input id="search" type="text" placeholder="Enter Keywords?" />
+          <div class="input-field first-wrap" style="width: 40%;">
+            <input id="search" type="text" placeholder="Enter url" />
+          </div>
+          <div class="input-field first-wrap">
+            <input id="firstPage" type="text" placeholder="Enter first page" />
+          </div>
+          <div class="input-field first-wrap">
+            <input id="lastPage" type="text" placeholder="Enter last page" />
           </div>
           <div class="input-field third-wrap">
             <button class="btn-search" type="button" onclick="findEmails();">
@@ -28,12 +34,28 @@
     <script>
       async function findEmails() {
         var url = document.getElementById("search").value;
+        var firstPage = document.getElementById("firstPage").value;
+        var lastPage = document.getElementById("lastPage").value;
+        console.log(firstPage + " " + lastPage);
+        const body = {
+          "url": url,
+          "firstPage": firstPage,
+          "lastPage": lastPage
+        }
+        
         fetch("http://localhost:8080/getEmail", {
           method: "POST", 
-          body: url
-        }).then(res => {
-          console.log("Request complete! response:", res.json());
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(body)
+        }).then(res => res.json()).then(data => {
+          console.log("Request complete! response:", data);
+          renderResponsePage(data);
         });
+      }
+
+      async function renderResponsePage(data) {
+        sessionStorage.setItem("data", data);
+        location.href = "response.html";
       }
     </script>
   </body><!-- This templates was made by Colorlib (https://colorlib.com) -->

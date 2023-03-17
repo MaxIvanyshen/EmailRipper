@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+  </head>
+  <body >
+    <style>
+        .container{
+            max-width: 100%;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container_content{
+            margin: 50px auto;
+            width: 1000px;
+            min-height: 400px;
+            background-color: white;
+            color: black;
+            border-radius: 10px; 
+            font-family: Poppins;
+
+        }
+        .email_content{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .email_list{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-column-gap: 80px;
+            align-items: center;
+            padding: 0px 0px 0px 0px
+        }
+        .email_items{
+            list-style-type: none;
+            margin: 4px auto;
+            display: flex;
+            text-align: center;
+        }
+    </style>
+    <div class="s003">
+        <div class="container">
+            <div class="container_content">
+                <div class="email_content">
+                    <ul id="email_list" class="email_list">
+                       
+                   
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/extention/choices.js"></script>
+    <script>
+        onload = () => showData(sessionStorage.getItem("data"));
+
+        function showData(data) {
+            var emailContainer = document.getElementById("email_list");
+            data = data.split(",");
+            for(var i = 0; i < data.length; i++) {
+
+              var tag = document.createElement("li");
+              tag.className = "email_items";
+              tag.textContent = data[i];
+              emailContainer.appendChild(tag);
+            }
+        }
+    </script>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
