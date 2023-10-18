@@ -46,7 +46,7 @@ public class Ripper {
                 doc = Jsoup.connect(newUrl).get();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -108,7 +108,9 @@ public class Ripper {
         ArrayList<String> emails = new ArrayList<>();
 
         addFoundEmailsToList(url, emails);
-        addFoundEmailsToList(getContactPage(url), emails);
+        String contactPage = getContactPage(url);
+        if(!contactPage.equals(""))
+            addFoundEmailsToList(contactPage, emails);
 
         return emails;
     }
@@ -124,7 +126,13 @@ public class Ripper {
         } catch (IllegalArgumentException e) {}
 
         Pattern p = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+");
-        Matcher matcher = p.matcher(doc.text());
+        Matcher matcher;
+        try {
+            matcher = p.matcher(doc.text());
+        } catch(NullPointerException e) {
+            return;
+        }
+
         while (matcher.find()) {
             String s = matcher.group();
             if(s.endsWith("."))
@@ -144,8 +152,12 @@ public class Ripper {
         String contactPageLink = "";
 
         connect(url);
-
-        Elements links = doc.select("a");
+        Elements links;
+        try {
+            links = doc.select("a");
+        } catch(NullPointerException e) {
+            return "";
+        }
 
         for(Element link : links) {
             boolean needed = link.ownText().equalsIgnoreCase("contact") || link.ownText().equalsIgnoreCase("contact us");
