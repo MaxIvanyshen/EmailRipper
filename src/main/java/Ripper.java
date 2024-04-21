@@ -66,7 +66,7 @@ public class Ripper {
         ArrayList<String> linkList = new ArrayList<>();
         for(Element link : addresses) {
             String s = link.attr("href");
-            boolean notNeededLink = s.startsWith("https://www.google.com") || s.startsWith("/search") || s.startsWith("https://support")
+            boolean notNeededLink = s.startsWith("https://www.google.com") || s.startsWith("/search") || s.startsWith("https://support") || s.startsWith("https://accounts.google.com")
                     || s.startsWith("https://policies")|| s.equals("#") || s.equals("");
             if(notNeededLink)
                 continue;
